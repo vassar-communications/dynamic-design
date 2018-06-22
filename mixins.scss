@@ -1,0 +1,78 @@
+@mixin underline($direction:left, $duration:0.2s) {
+  @include link-pseudo-setup($duration);
+
+  &:before {
+    border-bottom: 1px solid #000;
+    top: 100%;
+    @if $direction == "left" {
+      left: 0;
+    }
+    @else if $direction == "center" {
+      left: 50%;
+    }
+  }
+  &:hover {
+    &:before {
+      @if $direction == "left" {
+        width: 100%;
+      }
+      @else if $direction == "center" {
+        left: 0;
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+@mixin slide-on-hover($shift-distance, $direction:up) {
+  // in case the user enters a negative value
+  $shift-distance: abs($shift-distance);
+
+  &:hover {
+    position: relative;
+    @if $direction == "up" {
+      transform: translateY(-#{$shift-distance});
+    }
+    @else if $direction == "down" {
+      transform: translateY($shift-distance);
+    }
+    @else if $direction == "right" {
+      transform: translateX($shift-distance);
+    }
+      
+    &:after {
+      content: "";
+      
+      @if $direction == "up" or $direction == "down" {
+        height: calc(100% + #{$shift-distance});
+      }
+      @if $direction == "left" or $direction == "right" {
+        width: calc(100% + #{$shift-distance});
+      }
+      position: absolute;
+      
+      /* Noticed some jittering when hovering over the edge of
+         the element, so I've made the child element slightly wider */
+      left: -0.05%;
+      width: 101%;
+      
+      z-index: -1;
+
+      @if $direction == "up" {
+        bottom: -#{$shift-distance};
+        top: 0;
+      }
+      @else if $direction == "down" {
+        top: calc(-#{$shift-distance} - 1px);
+        bottom: 0;
+      }
+      @else if $direction == "right" {
+        top: 0;
+        left: calc(-#{$shift-distance} - 1px);
+        bottom: 0;
+        right: 0;
+      }
+    }
+  }
+}
