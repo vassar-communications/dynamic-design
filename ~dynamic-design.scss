@@ -1,3 +1,15 @@
+@import "utils";
+@import "_onload/_all";
+
+
+
+/*	Underline
+	=========
+	
+	a {
+		@include underline();
+	}
+*/
 @mixin underline($direction:left, $duration:0.2s) {
   @include link-pseudo-setup($duration);
 
@@ -76,3 +88,17 @@
     }
   }
 }
+
+
+@mixin sequential-delay($parent, $num-items, $initial-delay:0, $item-delay:0.2s, $children:"") {
+  @for $i from 1 through $num-items {
+    #{$parent}:nth-child(#{$i}) #{$children} {
+      border: 1px solid #f00;
+      $wait: $initial-delay + ($i * $item-delay);
+      transition-delay: $wait;
+    }
+  }
+}
+
+
+

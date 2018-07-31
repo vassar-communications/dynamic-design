@@ -1,0 +1,46 @@
+@mixin default-anim($delay:0s) {
+	/* If the specified animation doesn't run for some reason (say, Javascript is off), this animation runs within three seconds and reveals the hidden elements */
+
+	@keyframes default-anim {
+	    from { opacity: 0; }
+	    to { opacity: 1; }
+	}
+
+	animation: default-anim 0.4s linear $delay;
+	animation-fill-mode: forwards;
+}
+
+@mixin order($order) {
+	$delay: $DD_sequential-delay * $order;
+	
+	.js & {
+		animation-delay: $delay;
+	}
+}
+
+@mixin sequence($map:(item: 1)) {
+
+	$defaults: (
+		gap: 0.4s,
+		offset: 0s,
+		max-items: 20,
+	);
+	
+	$gap: has-key($map, $defaults, gap);
+	$offset: has-key($map, $defaults, offset);
+	$max-items: has-key($map, $defaults, max-items);
+
+	@for $i from 1 through $max-items {
+		&:nth-child(#{$i}) {
+			animation-delay: $offset + ($gap * $i);
+		}
+	}
+}
+
+@function has-key($map, $defaults, $key) {
+  @if map-has-key($map, $key) {
+      @return map-get($map, $key);
+    } @else {
+      @return map-get($defaults, $key);
+  }
+}
